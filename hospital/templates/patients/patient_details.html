@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-primary text-center">🩺 Patient Details</h2>
+        <hr>
+
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>🆔 ID:</strong> {{ patient.id }}</p>
+                <p><strong>👤 Username:</strong> {{ patient.username }}</p>
+                <p><strong>🧑 First Name:</strong> {{ patient.first_name }}</p>
+                <p><strong>🧑‍🦱 Last Name:</strong> {{ patient.last_name }}</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>🎂 Age:</strong> {{ patient.age }}</p>
+                <p><strong>📞 Contact:</strong> {{ patient.contact }}</p>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            {% if patient.is_authenticated %}
+                <a href="{% url 'patients_list' %}" class="btn btn-secondary">⬅️ Back</a>
+            {% else %}
+                <a href="{% url 'patient_dashboard' patient.pk %}" class="btn btn-secondary">⬅️ Back</a>
+            {% endif %}
+            <a href="{% url 'patient_update' patient.pk %}" class="btn btn-primary">✏️ Edit</a>
+            <a href="{% url 'patient_delete' patient.pk %}" class="btn btn-danger">🗑️ Delete</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Patient Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-primary text-center">👋 Welcome, {{ patient.name }}!</h2>
+        <p class="text-center text-muted">Here are your recent bills 📜</p>
+        <hr>
+
+        {% if bills %}
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>💰 Amount</th>
+                            <th>📌 Status</th>
+                            <th>📅 Created At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for bill in bills %}
+                        <tr>
+                            <td>{{ bill.id }}</td>
+                            <td>₹{{ bill.total_amount }}</td>
+                            <td>
+                                {% if bill.paid %}
+                                    <span class="badge bg-success">Paid ✅</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Pending ❌</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ bill.created_at|date:"Y-m-d H:i" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-center text-muted">No bills found. 🏥</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-primary text-center">
+            {% if form.instance.pk %} ✏️ Edit Bill {% else %} 🧾 Create New Bill {% endif %}
+        </h2>
+        <hr>
+
+        <form method="post" class="needs-validation" novalidate>
+            {% csrf_token %}
+            <div class="row">
+                {% for field in form %}
+                <div class="mb-3 col-md-6">
+                    <label class="form-label fw-bold">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <div class="form-text text-muted">{{ field.help_text }}</div>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="d-flex justify-content-center mt-4">
+                <button type="submit" class="btn btn-success px-4">💾 Save</button>
+                <a href="{% url 'bill_list' %}" class="btn btn-secondary ms-3">🚪 Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

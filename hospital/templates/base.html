@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Medical Billing System{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+        .navbar {
+            background: #343a40; /* Dark Grey */
+            padding: 10px;
+        }
+        .navbar-brand {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #ffffff;
+        }
+        .hero-section {
+            text-align: center;
+            padding: 40px 20px;
+            background: #495057; /* Slightly lighter dark grey */
+            color: white;
+            border-radius: 8px;
+            margin-top: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .hero-section h1 {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        .hero-section p {
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+        .btn-custom {
+            font-size: 1rem;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: all 0.3s ease-in-out;
+        }
+        .btn-custom:hover {
+            transform: scale(1.05);
+        }
+        .container {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">Medical Billing</a>
+        </div>
+    </nav>
+    {% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+
+    <div class="container">
+        <div class="hero-section">
+            <h1>Welcome to Medical Billing System</h1>
+            <p>Manage patient billing and services efficiently.</p>
+            {% if request.session.patient_id %}
+                <a class="btn btn-light btn-custom m-2" href="{% url 'patient_dashboard' pk=request.session.patient_id %}">Dashboard</a>
+                <a class="btn btn-danger btn-custom m-2" href="{% url 'logout' %}">Logout</a>
+            {% elif request.user.is_authenticated %}
+                <a class="btn btn-light btn-custom m-2" href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
+                <a class="btn btn-danger btn-custom m-2" href="{% url 'logout' %}">Logout</a>
+            {% else %}
+                <a class="btn btn-primary btn-custom m-2" href="{% url 'patient_login' %}">Login as Patient</a>
+                <a class="btn btn-secondary btn-custom m-2" href="{% url 'admin_login' %}">Login as Admin</a>
+                <a class="btn btn-success btn-custom m-2" href="{% url 'patient_add' %}">Register as New Patient</a>
+            {% endif %}
+        </div>
+
+        <div class="mt-4">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="mb-4">Welcome to Medical Billing System</h1>
+    <p>Manage patient billing and services easily.</p>
+    <a href="{% url 'patient_login' %}" class="btn btn-primary m-2">Login as Patient</a>
+    <a href="{% url 'admin_login' %}" class="btn btn-secondary m-2">Login as Admin</a>
+    <a href="{% url 'patient_add' %}" class="btn btn-success m-2">Register as New Patient</a>
+</div>
+{% endblock %}
