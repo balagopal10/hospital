@@ -3,8 +3,15 @@
 
 {% block content %}
 <div class="container mt-4">
-    <div class="card shadow-lg p-4">
-        <h2 class="text-primary text-center">👋 Welcome, {{ patient.name }}!</h2>
+    <div class="card shadow-lg p-4 position-relative">
+        <!-- View Profile Button (Top Right) -->
+        <div class="text-end">
+            <a href="{% url 'patient_details' patient.pk %}" class="btn btn-info">
+                👤 View Profile
+            </a>
+        </div>
+
+        <h2 class="text-primary text-center mt-2">👋 Welcome, {{ patient.name }}!</h2>
         <p class="text-center text-muted">Here are your recent bills 📜</p>
         <hr>
 

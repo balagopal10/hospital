@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Search for A Patient By Name{% endblock  %}
+{% block content %}
+<!-- 🔹 Search Form for Filtering Patients -->
+<form method="GET" action="{% url 'patients_by_name' %}" class="row g-3 mb-4">
+    <!-- Patient Name Input -->
+    <div class="col-md-3">
+        <label for="name" class="form-label">Search by Name:</label>
+        <input type="text" name="name" id="name" class="form-control" placeholder="Enter patient name">
+    </div>
+
+    <!-- Search Button -->
+    <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Search</button>
+    </div>
+</form>
+
+{% if patients is not None %}
+    <h4>Patients Having Name {{name}} are:</h4>
+    {% if patients %}
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered shadow-sm">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Patient ID</th>
+                        <th>View</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for patient in patients  %}
+                        <tr>
+                            <td>{{patient.id}}</td>
+                            <td><a href="{% url 'patient_details' patient.id %}" class="btn btn-info btn-sm">👀 View</a></td>
+                            <td><a href="{% url 'patient_update' patient.id %}" class="btn btn-warning btn-sm">✏️ Edit</a></td>
+                            <td><a href="{% url 'patient_delete' patient.id %}" class="btn btn-danger btn-sm">🗑️ Delete</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% endif %}
+{% endif %}
+{% endblock  %}

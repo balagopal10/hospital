@@ -1,14 +1,15 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import Group
 from django.contrib import messages
-from django.utils.timezone import now
+from django.utils.timezone import datetime,now
 from django.db.models import Sum
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
+
 from .models import Patient, Service, Bill
-from .forms import PatientAddForm, PatientEditForm, ServiceForm, BillForm
+from .forms import PatientAddForm, PatientEditForm, ServiceForm, BillForm,PatientPasswordChangeForm
 
 # Create your views here.
 def home(request):
@@ -42,13 +43,28 @@ def patient_update(request, pk):
         if form.is_valid() :
             form.save()
            
-            messages.success(request, "Your profile and password have been updated successfully!")
-            return redirect("patient_dashboard", pk)
+            messages.success(request, "Your profile has been updated successfully!")
+            return redirect("patient_details", pk)
 
     else:
         form = PatientEditForm(instance=patient)
        
-    return render(request, 'patients/form.html', {'form':form})
+    return render(request, 'patients/edit_form.html', {'form':form,'patient':patient})
+
+def change_patient_password(request, pk):
+    patient = Patient.objects.get(pk=pk)  # Get the patient by ID
+
+    if request.method == "POST":
+        form = PatientPasswordChangeForm(patient, request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your password has been successfully updated!")
+            return redirect("patient_dashboard", pk=patient.pk)  # Redirect to patient dashboard after success
+    else:
+        form = PatientPasswordChangeForm(patient)
+
+    return render(request, "patients/change_password.html", {"form": form, "patient": patient})
+
 
 def patient_delete(request, pk):
     patient = get_object_or_404(Patient, pk=pk)
@@ -222,3 +238,52 @@ def logout_view(request):
     logout(request)  # Clears Django auth session
     request.session.flush()  # Clears patient session
     return redirect("home")  # Redirect to home page
+
+def get_patient_by_id(request):
+    patient_id = request.GET.get("id")  # Get ID from search input
+    if not patient_id:
+        return render(request, "patients/patient_by_id.html", {"error_message": "Please enter a Patient ID."})
+
+    patient = Patient.objects.filter(pk=patient_id).first()  # Try to get the patient
+
+    if patient:
+        return redirect("patient_details", pk=patient.pk)  # Redirect to details page
+    else:
+        return render(request, "patients/patient_by_id.html", {"error_message": "Error! Patient Does not Exist"})
+
+
+def get_patients_by_service_and_date(request):
+    """
+    Retrieve all patients who have used a specific service on a given date.
+    
+    :param service_id: The ID of the service.
+    :param date: The date (YYYY-MM-DD) to filter bills.
+    :return: Queryset of Patients.
+    """
+    patients = None  # Default: No filter applied
+    services = Service.objects.all()  # Get all available services
+
+    service_id = request.GET.get("service_id")
+    filter_date = request.GET.get("date")
+
+    if service_id and filter_date:
+        try:
+            filter_date = datetime.strptime(filter_date, "%Y-%m-%d").date()
+            patients = Patient.objects.filter(
+                bill__services__id=service_id,
+                bill__created_at__date=filter_date
+            ).distinct()  # Avoid duplicate patients
+        except ValueError:
+            patients = None  # Invalid date format
+
+    context = {
+        'services': services,
+        'patients': patients,  # Pass filtered patients to template
+    }
+
+    return render (request,"patients/patients_by_service_n_date.html",context)
+
+def get_patients_by_name(request):
+    name = request.GET.get("name")
+    patients = Patient.objects.filter(name=name)
+    return render(request,"patients/patients_by_name.html",{'patients':patients,'name':name})

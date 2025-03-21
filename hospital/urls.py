@@ -2,6 +2,7 @@ from django.urls import path
 from .views import admin_dashboard, home, patient_add, patient_details, patient_list, patient_update, patient_delete, patient_dashboard
 from .views import service_create, service_list, service_update, service_delete, bill_create,bill_delete,bill_list,bill_update
 from .views import patient_login, admin_login, logout_view
+from .views import get_patients_by_service_and_date,get_patient_by_id,get_patients_by_name, change_patient_password
 
 urlpatterns = [
     path('',home,name = "home"),
@@ -23,6 +24,10 @@ urlpatterns = [
     path("login/", admin_login, name="admin_login"),
     path("logout/", logout_view, name="logout"),
     path("dashboard/", admin_dashboard, name="admin_dashboard"),
-     path("patient/dashboard/<str:pk>", patient_dashboard, name="patient_dashboard"),
-
+    path("patient/dashboard/<str:pk>", patient_dashboard, name="patient_dashboard"),
+    path("patients/change-password/<str:pk>/", change_patient_password, name="change_patient_password"),
+    path("patient-by-id",get_patient_by_id,name="patient_by_id"),
+     path('patients-by-service/', get_patients_by_service_and_date, name='patients_by_service'),
+     path('patients-by-name/',get_patients_by_name,name="patients_by_name"),
+     
 ]

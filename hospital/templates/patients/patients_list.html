@@ -8,6 +8,17 @@
             ➕ Add Patient
         </a>
     </div>
+    
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Search For a Patient
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="{% url 'patient_by_id' %}">Search By ID</a>
+          <a class="dropdown-item" href="{% url 'patients_by_name' %}">Search By Name</a>
+          <a class="dropdown-item" href="{% url 'patients_by_service' %}">Search Patients by Service and Date</a>
+        </div>
+      </div>
 
     <div class="table-responsive">
         <table class="table table-striped table-bordered shadow-sm">

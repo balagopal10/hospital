@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Filter Out Patients that have used a given service on a particular date{% endblock  %}
+{% block content %}
+
+   
+   <!-- 🔹 Search Form for Filtering Patients -->
+   <form method="GET" action="{% url 'patients_by_service' %}" class="row g-3 mb-4">
+    <div class="col-md-5">
+        <label for="service_id" class="form-label">Select Service:</label>
+        <select name="service_id" id="service_id" class="form-select">
+            <option value="">-- Select Service --</option>
+            {% for service in services %}
+                <option value="{{ service.id }}">{{ service.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-4">
+        <label for="date" class="form-label">Select Date:</label>
+        <input type="date" name="date" id="date" class="form-control">
+    </div>
+
+    <div class="col-md-3 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Search</button>
+    </div>
+</form>
+
+    <!-- 🔹 Display Search Results -->
+    {% if patients is not None %}
+        <h4>Patients who used the selected service on the given date:</h4>
+        {% if patients %}
+            <ul class="list-group">
+                {% for patient in patients %}
+                    <li class="list-group-item">
+                        {{ patient.name }} - Contact: {{ patient.contact_number }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-danger">No patients found for the selected criteria.</p>
+        {% endif %}
+    {% endif %}
+
+{% endblock  %}

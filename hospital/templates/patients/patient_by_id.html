@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+    <!-- 🔹 Search Form for Filtering Patients -->
+    <form id="patientSearchForm" method="GET" action="{% url 'patient_by_id' %}" class="row g-3 mb-4">
+        {% csrf_token %}
+
+        <!-- Patient ID Input -->
+        <div class="col-md-3">
+            <label for="id" class="form-label">Search by ID:</label>
+            <input type="text" name="id" id="id" class="form-control" placeholder="Enter Patient ID">
+        </div>
+
+        <!-- Search Button -->
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Search</button>
+        </div>
+    </form>
+
+    {% if error_message %}
+        <div class="alert alert-danger mt-3">
+            {{ error_message }}
+        </div>
+    {% endif %}
+
+{% endblock %}
