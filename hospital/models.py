@@ -1,5 +1,6 @@
 from django.db import models
 import random,string
+from decimal import Decimal
 
 class Patient(models.Model):
     id = models.CharField(primary_key=True, max_length=10, unique=True, editable=False)
@@ -49,7 +50,7 @@ class Bill(models.Model):
             return self.total_amount  # Return default value if not saved yet
 
         service_total = sum(service.base_price for service in self.services.all())
-        discount_amount = (self.discount / 100) * service_total
+        discount_amount = (Decimal(self.discount) / Decimal(100)) * service_total  
         return service_total - discount_amount  # Return calculated total
 
     def save(self, *args, **kwargs):

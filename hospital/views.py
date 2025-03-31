@@ -196,7 +196,7 @@ def admin_dashboard(request):
 
     recent_bills = Bill.objects.order_by('-id')[:5]  # Get the latest 5 bills
     total_bills_today = Bill.objects.filter(created_at__date=today).count()
-    total_amount_collected = Bill.objects.filter(paid=True).aggregate(Sum('total_amount'))['total_amount__sum'] or 0
+    total_amount_collected = Bill.objects.filter(paid=True,created_at__date=today).aggregate(Sum('total_amount'))['total_amount__sum'] or 0
     pending_payments = Bill.objects.filter(paid=False).count()
 
     context = {
